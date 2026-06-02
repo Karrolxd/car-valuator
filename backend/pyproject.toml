@@ -1,0 +1,30 @@
+[project]
+name = "car-valuator-backend"
+version = "0.1.0"
+description = "Car Valuator — backend FastAPI"
+requires-python = "==3.12.*"
+dependencies = [
+    # API
+    "fastapi[standard]==0.136.3",
+    "python-dotenv==1.2.2",
+
+    # Baza danych
+    "sqlalchemy==2.0.50",
+    "alembic==1.18.4",
+    "asyncpg==0.31.0",
+
+    # ML
+    "scikit-learn==1.9.0",
+    "xgboost==3.2.0",
+    "pandas==3.0.3",
+    "numpy==2.4.6",
+    "joblib==1.5.3",
+
+    # Scraping
+    "curl-cffi==0.15.0",
+    "playwright==1.60.0",
+
+    # Walidacja
+    "pydantic==2.13.4",
+    "pydantic-settings==2.14.1",
+]

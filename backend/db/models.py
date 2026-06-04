@@ -7,6 +7,7 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
+    Index,
     Integer,
     JSON,
     Text,
@@ -69,6 +70,12 @@ class CarModel(Base):
 
 class Listing(Base):
     __tablename__ = "listings"
+
+    __table_args__ = (
+        Index("ix_listings_model_year", "model_id", "year"),
+        Index("ix_listings_model_year_mileage", "model_id", "year", "mileage_km"),
+        Index("ix_listings_is_active", "is_active"),
+    )
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     otomoto_id: Mapped[str] = mapped_column(Text, unique=True, nullable=False)

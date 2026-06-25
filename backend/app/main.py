@@ -1,10 +1,11 @@
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.services.model_loader import load_model
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Start aplikacji")
+    await load_model(app)
     yield
     logger.info("Zamknięcie aplikacji")
 
@@ -32,8 +34,13 @@ app.add_middleware(
 
 
 @app.get("/health")
-async def health() -> dict:
+async def health(request: Request) -> dict:
+    model_loaded = getattr(request.app.state, "model", None) is not None
+    trained_at = None
+    if model_loaded and request.app.state.model_metadata:
+        trained_at = request.app.state.model_metadata.get("trained_at")
     return {
         "status": "ok",
-        "model_loaded": False,
+        "model_loaded": model_loaded,
+        "trained_at": trained_at,
     }

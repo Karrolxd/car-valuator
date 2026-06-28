@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.services.model_loader import load_model
+from app.core.model_loader import load_model
 
 from app.api.catalog import router as catalog_router
 

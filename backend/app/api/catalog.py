@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.schemas.catalog import BrandResponse, ModelResponse
 from db.models import Brand, CarModel, Listing
 from db.session import AsyncSessionLocal
 
@@ -17,8 +18,10 @@ async def get_session():
         yield session
 
 
-@router.get("")
-async def get_brands(session: AsyncSession = Depends(get_session)) -> list[dict]:
+@router.get("", response_model=list[BrandResponse])
+async def get_brands(
+    session: AsyncSession = Depends(get_session),
+) -> list[BrandResponse]:
     result = await session.execute(
         select(Brand)
         .join(CarModel, CarModel.brand_id == Brand.id)
@@ -29,16 +32,16 @@ async def get_brands(session: AsyncSession = Depends(get_session)) -> list[dict]
     )
     brands = result.scalars().all()
     return [
-        {"id": b.id, "name": b.name, "slug": b.slug}
+        BrandResponse(id=b.id, name=b.name, slug=b.slug)
         for b in brands
     ]
 
 
-@router.get("/{brand_id}/models")
+@router.get("/{brand_id}/models", response_model=list[ModelResponse])
 async def get_models(
-        brand_id: int,
-        session: AsyncSession = Depends(get_session),
-) -> list[dict]:
+    brand_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> list[ModelResponse]:
     result = await session.execute(
         select(
             CarModel,
@@ -54,11 +57,11 @@ async def get_models(
     )
     rows = result.all()
     return [
-        {
-            "id": row.CarModel.id,
-            "name": row.CarModel.name,
-            "slug": row.CarModel.slug,
-            "listings_count": row.listings_count,
-        }
+        ModelResponse(
+            id=row.CarModel.id,
+            name=row.CarModel.name,
+            slug=row.CarModel.slug,
+            listings_count=row.listings_count,
+        )
         for row in rows
     ]

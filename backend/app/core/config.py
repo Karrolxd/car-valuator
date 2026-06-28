@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     @classmethod
     def parse_cors(cls, v):
         if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("["):
+                import json
+                return json.loads(v)
             return [origin.strip() for origin in v.split(",")]
         return v
 

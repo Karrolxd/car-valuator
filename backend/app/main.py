@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.services.model_loader import load_model
 
+from app.api.catalog import router as catalog_router
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,6 +34,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+app.include_router(catalog_router)
 
 @app.get("/health")
 async def health(request: Request) -> dict:

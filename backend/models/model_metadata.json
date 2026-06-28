@@ -1,0 +1,30 @@
+{
+  "trained_at": "2026-06-08T11:32:36.071505+00:00",
+  "features": [
+    "year",
+    "mileage_km",
+    "engine_capacity_cm3",
+    "engine_power_hp",
+    "fuel_type",
+    "gearbox",
+    "brand",
+    "model"
+  ],
+  "numeric_features": [
+    "year",
+    "mileage_km",
+    "engine_capacity_cm3",
+    "engine_power_hp"
+  ],
+  "categorical_features": [
+    "fuel_type",
+    "gearbox",
+    "brand",
+    "model"
+  ],
+  "metrics": {
+    "mape": 0.1636,
+    "mae": 7990.8,
+    "median_ae": 4110.66
+  }
+}

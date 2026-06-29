@@ -9,8 +9,6 @@ build/
 .pytest_cache/
 
 # ML artefakty
-backend/models/*.pkl
-backend/models/*.json
 backend/models/*.png
 
 # Środowisko

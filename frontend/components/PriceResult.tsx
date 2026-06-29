@@ -1,6 +1,7 @@
 "use client";
 
 import type { PredictResponse, Confidence } from "@/lib/types";
+import { PriceDistributionChart } from "@/components/PriceDistributionChart";
 
 const CONFIDENCE_CONFIG: Record<
     Confidence,
@@ -198,6 +199,12 @@ export function PriceResult({ result }: Props) {
                         <span style={{ fontSize: "0.5em", color: "var(--muted)" }}>zł</span>
                     </div>
                 </div>
+                {result.price_distribution.length > 0 && (
+                    <PriceDistributionChart
+                        data={result.price_distribution}
+                        predictedPrice={result.predicted_price_pln}
+                    />
+                )}
             </div>
         </div>
     );

@@ -2,6 +2,7 @@
 
 import type { PredictResponse, Confidence } from "@/lib/types";
 import { PriceDistributionChart } from "@/components/PriceDistributionChart";
+import { SimilarListingsTable } from "@/components/SimilarListingsTable";
 
 const CONFIDENCE_CONFIG: Record<
     Confidence,
@@ -204,6 +205,9 @@ export function PriceResult({ result }: Props) {
                         data={result.price_distribution}
                         predictedPrice={result.predicted_price_pln}
                     />
+                )}
+                {result.similar_listings.length > 0 && (
+                    <SimilarListingsTable listings={result.similar_listings} />
                 )}
             </div>
         </div>

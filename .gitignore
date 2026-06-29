@@ -35,4 +35,4 @@ Thumbs.db
 
 # Trzymaj placeholder folderu models w gicie
 !backend/models/.gitkeep
-backend/.venv/
+backend/.venv/backup*.sql

@@ -65,6 +65,8 @@ def parse_listing(edge: dict[str, Any]) -> dict[str, Any] | None:
         "currency": currency,
         "city": city,
         "voivodeship": voivodeship,
+        "brand_slug": params.get("make"),
+        "model_slug": params.get("model"),
     }
 
 

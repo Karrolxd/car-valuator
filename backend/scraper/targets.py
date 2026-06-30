@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -7,6 +7,23 @@ class Target:
     model: str
     brand_slug: str
     model_slug: str
+    # slug używany w URL (może być inny niż model_slug)
+    url_slug: str = ""
+    # slugi które akceptujemy przy filtracji (startswith)
+    # jeśli puste — używamy model_slug
+    model_slug_variants: tuple[str, ...] = field(default_factory=tuple)
+
+    def __post_init__(self):
+        # jeśli url_slug nie podany — używamy model_slug
+        if not self.url_slug:
+            object.__setattr__(self, "url_slug", self.model_slug)
+
+    def matches_model_slug(self, slug: str) -> bool:
+        """Czy slug z ogłoszenia pasuje do tego targetu."""
+        if not slug:
+            return True
+        variants = self.model_slug_variants if self.model_slug_variants else (self.model_slug,)
+        return any(slug.startswith(v) for v in variants)
 
 
 TARGETS: list[Target] = [
@@ -29,10 +46,34 @@ TARGETS: list[Target] = [
     Target("Mercedes-Benz", "Klasa C", "mercedes-benz", "klasa-c"),
     Target("Mercedes-Benz", "Klasa E", "mercedes-benz", "klasa-e"),
     Target("Mercedes-Benz", "GLC", "mercedes-benz", "glc"),
-    # Audi
-    Target("Audi", "A4", "audi", "a4"),
-    Target("Audi", "A3", "audi", "a3"),
-    Target("Audi", "A6", "audi", "a6"),
+    # Audi A4 — dwa osobne URL-e, jeden model w bazie
+    Target(
+        "Audi", "A4", "audi", "a4",
+        url_slug="a4-limousine",
+        model_slug_variants=("a4-limousine",),
+    ),
+    Target(
+        "Audi", "A4", "audi", "a4",
+        url_slug="a4-avant",
+        model_slug_variants=("a4-avant",),
+    ),
+    # Audi A3
+    Target(
+        "Audi", "A3", "audi", "a3",
+        url_slug="a3-sportback",
+        model_slug_variants=("a3-sportback", "a3-limousine", "a3-3-drzwiowe"),
+    ),
+    # Audi A6
+    Target(
+        "Audi", "A6", "audi", "a6",
+        url_slug="a6-limousine",
+        model_slug_variants=("a6-limousine",),
+    ),
+    Target(
+        "Audi", "A6", "audi", "a6",
+        url_slug="a6-avant",
+        model_slug_variants=("a6-avant", "a6-allroad"),
+    ),
     Target("Audi", "Q5", "audi", "q5"),
     # Skoda
     Target("Skoda", "Octavia", "skoda", "octavia"),
@@ -59,9 +100,17 @@ TARGETS: list[Target] = [
     # Peugeot
     Target("Peugeot", "308", "peugeot", "308"),
     Target("Peugeot", "508", "peugeot", "508"),
-    # Mazda
-    Target("Mazda", "Mazda 6", "mazda", "mazda-6"),
-    Target("Mazda", "Mazda 3", "mazda", "mazda-3"),
+    # Mazda 6 i 3 — prawdziwe slugi to "6" i "3"
+    Target(
+        "Mazda", "Mazda 6", "mazda", "mazda-6",
+        url_slug="6",
+        model_slug_variants=("6",),
+    ),
+    Target(
+        "Mazda", "Mazda 3", "mazda", "mazda-3",
+        url_slug="3",
+        model_slug_variants=("3",),
+    ),
     Target("Mazda", "CX-5", "mazda", "cx-5"),
     # Honda
     Target("Honda", "Civic", "honda", "civic"),
@@ -76,7 +125,7 @@ BASE_URL = "https://www.otomoto.pl/osobowe"
 
 
 def build_search_url(target: Target, page: int = 1) -> str:
-    url = f"{BASE_URL}/{target.brand_slug}/{target.model_slug}"
+    url = f"{BASE_URL}/{target.brand_slug}/{target.url_slug}"
     if page > 1:
         url += f"?page={page}"
     return url

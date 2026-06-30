@@ -63,8 +63,6 @@ car-valuator/
     └── ml/               trening i ewaluacja modelu
 ```
 
-Pełny opis decyzji architektonicznych w [`ARCHITECTURE.md`](ARCHITECTURE.md).
-
 ## Uruchomienie lokalne
 
 ### Backend

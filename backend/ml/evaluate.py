@@ -65,7 +65,6 @@ def plot_errors(y_true: np.ndarray, y_pred: np.ndarray) -> None:
     plot_path = MODEL_DIR / "evaluation_plots.png"
     plt.savefig(plot_path, dpi=150)
     logger.info("Wykresy zapisane: %s", plot_path)
-    plt.show()
 
 
 def save_artifacts(pipeline: Pipeline, metrics: dict) -> None:
@@ -99,8 +98,8 @@ def evaluate_and_save(
     logger.info("Ewaluacja modelu...")
     y_pred = pipeline.predict(X_test)
     metrics = compute_metrics(y_test, y_pred)
-    plot_errors(y_test, y_pred)
     save_artifacts(pipeline, metrics)
+    plot_errors(y_test, y_pred)
     logger.info("Gotowe!")
 
 

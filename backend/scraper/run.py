@@ -43,7 +43,11 @@ async def scrape_target(target, run_id: int) -> tuple[int, int, int]:
             )
             await session.commit()
 
-            normalized = normalize_many(parsed, model_id=model_id)
+            normalized = normalize_many(
+                parsed,
+                model_id=model_id,
+                target=target,
+            )
             added, updated = await upsert_listings(session, normalized)
 
             seen_ids = {r["otomoto_id"] for r in normalized}

@@ -1,5 +1,8 @@
 import logging
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from scraper.targets import Target
 
 logger = logging.getLogger(__name__)
 
@@ -8,6 +11,7 @@ FUEL_TYPE_MAP = {
     "diesel": "diesel",
     "hybrid": "hybrid",
     "plug-in-hybrid": "phev",
+    "plugin-hybrid": "phev",
     "electric": "electric",
     "lpg": "lpg",
 }
@@ -17,7 +21,6 @@ GEARBOX_MAP = {
     "automatic": "automatic",
 }
 
-# Przybliżone kursy do PLN (fallback gdy cena nie jest w PLN)
 CURRENCY_TO_PLN = {
     "PLN": 1.0,
     "EUR": 4.25,
@@ -66,10 +69,32 @@ def _normalize_gearbox(value: str | None) -> str | None:
 def normalize(
     raw: dict[str, Any],
     model_id: int,
+    target: "Target",
 ) -> dict[str, Any] | None:
     otomoto_id = raw.get("otomoto_id")
     if not otomoto_id:
         logger.warning("Brak otomoto_id — pomijam ogłoszenie")
+        return None
+
+    brand_slug = raw.get("brand_slug", "")
+    model_slug = raw.get("model_slug", "")
+
+    if brand_slug and brand_slug != target.brand_slug:
+        logger.debug(
+            "Pomijam %s — zła marka: %s != %s",
+            otomoto_id,
+            brand_slug,
+            target.brand_slug,
+        )
+        return None
+
+    if model_slug and not target.matches_model_slug(model_slug):
+        logger.debug(
+            "Pomijam %s — zły model: %s nie pasuje do %s",
+            otomoto_id,
+            model_slug,
+            target.model_slug,
+        )
         return None
 
     price_pln = _normalize_price(raw)
@@ -102,10 +127,11 @@ def normalize(
 def normalize_many(
     raw_listings: list[dict[str, Any]],
     model_id: int,
+    target: "Target",
 ) -> list[dict[str, Any]]:
     results = []
     for raw in raw_listings:
-        normalized = normalize(raw, model_id=model_id)
+        normalized = normalize(raw, model_id=model_id, target=target)
         if normalized is not None:
             results.append(normalized)
     logger.info(

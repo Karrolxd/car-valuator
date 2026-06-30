@@ -23,12 +23,14 @@ export default function RootLayout({
         <html lang="pl" className={inter.variable}>
         <body style={{ background: "var(--bg)", color: "var(--text)" }}>
         <header
+            className="container-padding"
             style={{
                 borderBottom: "1px solid var(--border)",
-                padding: "16px 24px",
+                paddingTop: "16px",
+                paddingBottom: "16px",
             }}
         >
-            <div style={{ maxWidth: "1100px", margin: "0 auto", display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{maxWidth: "1100px", margin: "0 auto", display: "flex", alignItems: "center", gap: "12px"}}>
                 <div
                     style={{
                         width: "32px",
@@ -44,28 +46,37 @@ export default function RootLayout({
                     🚗
                 </div>
                 <div>
-                    <div style={{ fontWeight: 700, fontSize: "0.95rem", letterSpacing: "-0.01em" }}>
+                    <div style={{fontWeight: 700, fontSize: "0.95rem", letterSpacing: "-0.01em"}}>
                         Wyceniarka
                     </div>
-                    <div style={{ fontSize: "0.7rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    <div style={{
+                        fontSize: "0.7rem",
+                        color: "var(--muted)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em"
+                    }}>
                         Rynkowa cena auta
                     </div>
                 </div>
             </div>
         </header>
         <main
+            className="container-padding"
             style={{
                 maxWidth: "1100px",
                 margin: "0 auto",
-                padding: "40px 24px",
+                paddingTop: "32px",
+                paddingBottom: "32px",
             }}
         >
             {children}
         </main>
         <footer
+            className="container-padding"
             style={{
                 borderTop: "1px solid var(--border)",
-                padding: "20px 24px",
+                paddingTop: "20px",
+                paddingBottom: "20px",
                 textAlign: "center",
                 color: "var(--muted)",
                 fontSize: "0.75rem",

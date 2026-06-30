@@ -17,9 +17,13 @@
   box-sizing: border-box;
 }
 
-html {
+html,
+body {
   background: var(--bg);
   color: var(--text);
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
@@ -86,6 +90,8 @@ body {
   padding: 10px 14px;
   font-size: 0.925rem;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   transition: border-color 0.15s ease;
 }
 
@@ -141,7 +147,14 @@ select.input {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 24px;
+  }
 }
 
 /* Divider */
@@ -149,4 +162,42 @@ select.input {
   border: none;
   border-top: 1px solid var(--border);
   margin: 20px 0;
+}
+
+/* Layout responsywny */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .results-grid {
+    grid-template-columns: minmax(320px, 420px) 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+}
+
+/* Container padding mobile-first */
+.container-padding {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 640px) {
+  .container-padding {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.hero-title {
+  font-size: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 2rem;
+  }
 }

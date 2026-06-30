@@ -28,15 +28,8 @@ export default async function Home() {
                 </p>
             </div>
 
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "minmax(320px, 420px) 1fr",
-                    gap: "32px",
-                    alignItems: "start",
-                }}
-            >
-                <ValuationForm brands={brands} />
+            <div className="results-grid">
+                <ValuationForm brands={brands}/>
             </div>
         </div>
     );
